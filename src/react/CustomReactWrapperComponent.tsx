@@ -16,6 +16,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 
 import { CustomReactButton } from "./customReactButton";
+import { App } from "./app/App";
 
 const containerElementRef = "customReactComponentContainer";
 
@@ -69,6 +70,7 @@ export class CustomReactWrapperComponent
       <React.StrictMode>
         <div>
           <CustomReactButton counter={counter} onClick={this.handleClick} />
+          <App />
         </div>
       </React.StrictMode>
     );
