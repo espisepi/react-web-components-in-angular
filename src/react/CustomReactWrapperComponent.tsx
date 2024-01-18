@@ -1,7 +1,20 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges,
-  OnDestroy, Output, SimpleChanges, ViewChild, ViewEncapsulation } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  SimpleChanges,
+  ViewChild,
+  ViewEncapsulation,
+} from "@angular/core";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+// import * as ReactDOM from "react-dom";
+import * as ReactDOM from "react-dom/client";
+
 import { CustomReactButton } from "./customReactButton";
 
 const containerElementRef = "customReactComponentContainer";
@@ -12,11 +25,15 @@ const containerElementRef = "customReactComponentContainer";
   // styleUrls: [""],
   encapsulation: ViewEncapsulation.None,
 })
-export class CustomReactWrapperComponent implements OnChanges, OnDestroy, AfterViewInit {
+export class CustomReactWrapperComponent
+  implements OnChanges, OnDestroy, AfterViewInit
+{
   @ViewChild(containerElementRef, { static: true }) containerRef!: ElementRef;
 
   @Input() public counter = 10;
   @Output() public componentClick = new EventEmitter<void>();
+
+  rootReact: any;
 
   constructor() {
     this.handleClick = this.handleClick.bind(this);
@@ -34,26 +51,26 @@ export class CustomReactWrapperComponent implements OnChanges, OnDestroy, AfterV
   }
 
   ngAfterViewInit() {
+    // Create root to react
+    this.rootReact = ReactDOM.createRoot(
+      this.containerRef.nativeElement as HTMLElement
+    );
     this.render();
   }
 
   ngOnDestroy() {
-    ReactDOM.unmountComponentAtNode(this.containerRef.nativeElement);
+    // TODO: Ver que carajo ponemos aqui
+    // ReactDOM.unmountComponentAtNode(this.containerRef.nativeElement);
   }
 
   private render() {
     const { counter } = this;
-
-    ReactDOM.render(
+    this.rootReact?.render(
       <React.StrictMode>
         <div>
-          <CustomReactButton
-            counter={counter}
-            onClick={this.handleClick}
-          />
+          <CustomReactButton counter={counter} onClick={this.handleClick} />
         </div>
-      </React.StrictMode>,
-      this.containerRef.nativeElement
+      </React.StrictMode>
     );
   }
 }
